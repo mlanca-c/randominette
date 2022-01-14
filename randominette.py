@@ -6,17 +6,19 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/14 11:58:56 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/14 15:38:04 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import requests
 import json
+import pprint
 from decouple import config
 import time
 #from oauthlib.oauth2 import WebApplicationClient
 
 def main():
+    cluster = int(input("Cluster: "))
     mode = input("Mode (t for testing): ")
     if mode == "t" :
         client_id = config('42-UID-T')
@@ -26,7 +28,6 @@ def main():
         client_id = config('42-UID')
         client_secret = config('42-SECRET')
         my_time = 2
-    authorization_base_url = "https://api.intra.42.fr/oauth/authorize"
     token_url = "https://api.intra.42.fr/oauth/token"
     data = {
             "grant_type": "client_credentials",
@@ -39,20 +40,27 @@ def main():
             )
     print("Response from POST request")
     print(access_token.text)
-    access_token_j = access_token.json() 
-    token = access_token_j["access_token"]
-    print("Our token:")
-    print(token)
+    ret = access_token.json() 
+    #token = access_token_j["access_token"]
     params = {
-            "Authorization": f"Bearer {token}",
+            "Authorization": f"{ret['token_type']} {ret['access_token']}",
             }
     print("Our params:")
     print(params)
     time.sleep(my_time)
-    users_in_campus = requests.get("https://api.intra.42.fr/v2/campus/38/locations", params=params)
+    users_in_campus = requests.get("https://api.intra.42.fr/v2/campus/38/locations?sort=host", headers=params).json()
+    i = 0
+    for student in users_in_campus:
+        if student['user']['location'][1] == cluster:
+            pprint.pprint(student)
+        else:
+            i = i + 1
+            print(i)
     print("Response from GET request")
-    print(users_in_campus.headers)
-    print(users_in_campus.text)
+    #print(users_in_campus.headers)
+    #print(users_in_campus.text)
+    pprint.pprint(users_in_campus)
+#print(str(users_in_campus))
 
 if __name__ == '__main__':
     main()
