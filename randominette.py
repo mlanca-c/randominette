@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    randominette.py                                    :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ayalla, sotto & dutesier                  +#+  +:+       +#+         #
+#    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/14 08:01:29 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/14 08:17:42 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,18 +29,22 @@ def main():
             token_url,
             data,
             )
+    print("Response from POST request")
     print(access_token.text)
     access_token_j = access_token.json() 
     token = access_token_j["access_token"]
+    print("Our token:")
     print(token)
     params = {
             "Authorization": f"Bearer {token}",
             "filter": "[id]=28"
             }
+    print("Our params:")
     print(params)
     users_in_campus = requests.get("https://api.intra.42.fr/v2/campus_users", params=params)
-    print(users_in_campus.headers)
-    print(users_in_campus.text)
+    print("Response from GET request")
+    print("Headers: " + users_in_campus.headers)
+    print("Text " + users_in_campus.text)
 
 if __name__ == '__main__':
     main()
