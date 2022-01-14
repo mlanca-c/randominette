@@ -6,18 +6,26 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/14 08:17:42 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/14 11:58:56 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import requests
 import json
+from decouple import config
+import time
 #from oauthlib.oauth2 import WebApplicationClient
 
 def main():
-    client_id = '4750c51e351446aa3ca5c0e7059ccc066b9dfffc21e8ddce787a76971c56f984'
-
-    client_secret = input("Enter Secret: ")
+    mode = input("Mode (t for testing): ")
+    if mode == "t" :
+        client_id = config('42-UID-T')
+        client_secret = config('42-SECRET-T')
+        my_time = int(input("Time between requests: "))
+    else :
+        client_id = config('42-UID')
+        client_secret = config('42-SECRET')
+        my_time = 2
     authorization_base_url = "https://api.intra.42.fr/oauth/authorize"
     token_url = "https://api.intra.42.fr/oauth/token"
     data = {
@@ -37,14 +45,14 @@ def main():
     print(token)
     params = {
             "Authorization": f"Bearer {token}",
-            "filter": "[id]=28"
             }
     print("Our params:")
     print(params)
-    users_in_campus = requests.get("https://api.intra.42.fr/v2/campus_users", params=params)
+    time.sleep(my_time)
+    users_in_campus = requests.get("https://api.intra.42.fr/v2/campus/38/locations", params=params)
     print("Response from GET request")
-    print("Headers: " + users_in_campus.headers)
-    print("Text " + users_in_campus.text)
+    print(users_in_campus.headers)
+    print(users_in_campus.text)
 
 if __name__ == '__main__':
     main()
