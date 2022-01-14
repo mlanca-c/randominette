@@ -6,7 +6,7 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/14 15:38:04 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/14 16:19:54 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ import time
 #from oauthlib.oauth2 import WebApplicationClient
 
 def main():
+    campus = int(input("Campus ID (38 for Lisbon): "))
     cluster = int(input("Cluster: "))
     mode = input("Mode (t for testing): ")
     if mode == "t" :
@@ -44,6 +45,8 @@ def main():
     #token = access_token_j["access_token"]
     params = {
             "Authorization": f"{ret['token_type']} {ret['access_token']}",
+            f"range[{campus}]": f"c{campus}r0s0,c{campus}r23s17",
+            "page[size]": "100",
             }
     print("Our params:")
     print(params)
@@ -51,11 +54,11 @@ def main():
     users_in_campus = requests.get("https://api.intra.42.fr/v2/campus/38/locations?sort=host", headers=params).json()
     i = 0
     for student in users_in_campus:
-        if student['user']['location'][1] == cluster:
-            pprint.pprint(student)
-        else:
-            i = i + 1
-            print(i)
+        #if student['user']['location'][1] == cluster:
+         #   pprint.pprint(student)
+        #else:
+        i = i + 1
+        print(i)
     print("Response from GET request")
     #print(users_in_campus.headers)
     #print(users_in_campus.text)
