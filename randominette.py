@@ -41,7 +41,7 @@ def main():
             )
     print("Response from POST request")
     print(access_token.text)
-    ret = access_token.json() 
+    ret = access_token.json()
     #token = access_token_j["access_token"]
     page = {
             "number": 1,
@@ -54,7 +54,7 @@ def main():
             "Authorization": f"{ret['token_type']} {ret['access_token']}",
             }
     params = {
-            #f"range[campus_id]": f"c{cluster}r00s00,c{cluster}r99s99",
+            f"range[campus_id]": f"c{cluster}r00s00,c{cluster}r99s99",
             "filter": filter_42,
             "page": page
             }
