@@ -6,7 +6,7 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/14 16:19:54 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/14 20:36:10 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,26 +43,37 @@ def main():
     print(access_token.text)
     ret = access_token.json() 
     #token = access_token_j["access_token"]
-    params = {
-            "Authorization": f"{ret['token_type']} {ret['access_token']}",
-            f"range[{campus}]": f"c{campus}r0s0,c{campus}r23s17",
-            "page[size]": "100",
+    page = {
+            "number": 1,
+            "size": 50
             }
+    filter_42 = {
+            "end_at" : None,
+            }
+    headers = {
+            "Authorization": f"{ret['token_type']} {ret['access_token']}",
+            }
+    params = {
+            #f"range[campus_id]": f"c{cluster}r00s00,c{cluster}r99s99",
+            "filter": filter_42,
+            "page": page
+            }
+    print("Our headers:")
+    print(headers)
     print("Our params:")
     print(params)
     time.sleep(my_time)
-    users_in_campus = requests.get("https://api.intra.42.fr/v2/campus/38/locations?sort=host", headers=params).json()
+    ret = requests.get(f"https://api.intra.42.fr/v2/campus/{campus}/locations?sort=-end_at,host", headers=headers, json=params)
+    users_in_campus = ret.json()
+    #print(ret.text)
     i = 0
-    for student in users_in_campus:
-        #if student['user']['location'][1] == cluster:
-         #   pprint.pprint(student)
-        #else:
-        i = i + 1
-        print(i)
     print("Response from GET request")
     #print(users_in_campus.headers)
     #print(users_in_campus.text)
     pprint.pprint(users_in_campus)
+    for student in users_in_campus:
+        i = i + 1
+        print(i)
 #print(str(users_in_campus))
 
 if __name__ == '__main__':
