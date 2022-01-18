@@ -73,7 +73,7 @@ def main():
             second_page = ret.json()
             users_in_campus = users_in_campus + second_page
             if len(second_page) != page['size']:
-                break 
+                break
             #pprint.pprint(users_in_campus)
     # Get ammount of active users
     for student in users_in_campus:
@@ -81,14 +81,12 @@ def main():
     print(f"There are currently {i} active users in cluster {cluster} at campus {campus}")
     if i == 0:
         return
-    # Pick a random user
-    if i > 1:
-        chosen_one = random.randrange(0, i - 1)
-    if i == 1:
-        chosen_one = 0
+    chosen_one = random_user(users_in_campus)
     print("The Chosen One is: ")
     print(users_in_campus[chosen_one]['user']['login'])
     print(users_in_campus[chosen_one]['user']['location'])
+
+    # Pick all users from the random's user row
     if len(sys.argv) > 1 and sys.argv[1].find("r") > 0 :
         row = get_user_row(users_in_campus[chosen_one]['user']['location'])
         if row:
@@ -97,7 +95,41 @@ def main():
                 if (get_user_row(student['user']['location'])==row):
                     print(student['user']['login'])
                     print(student['user']['location'])
+    # Pick a random percentafe for users to be randomly selected
+    if len(sys.argv) > 1 and sys.argv[1].find("p") > 0 :
+        while (True):
+            percentage = int(input("Percentage of victims (%): "))
+            if (percentage <= 100):
+                break
+        number_users = int(len(users_in_campus) * (percentage / 100))
+        sample = random_users(users_in_campus, number_users)
+        # Print chosen users
+        for n in sample:
+            print(users_in_campus[n]['user']['login'])
+            print(users_in_campus[n]['user']['location'])
 
+def not_duplicate(idx, percentage_users):
+    for n in percentage_users:
+        if idx == n:
+            return False
+    return True
+
+def random_users(users_in_campus, nu):
+    i = len(users_in_campus)
+    if (i == 1):
+        sample = [0]
+    else:
+        sample = random.sample(range(i), nu)
+    return (sample)
+
+def random_user(users_in_campus):
+    # Pick a random user
+    i = len(users_in_campus)
+    if i > 1:
+        chosen_one = random.randrange(0, i - 1)
+    if i == 1:
+        chosen_one = 0
+    return (chosen_one)
 
 def get_user_row(location):
     return (location[location.find("r"):location.find("s")])
