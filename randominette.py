@@ -6,7 +6,7 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/18 12:37:18 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/18 14:14:02 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,7 @@ def main():
     # Set pagination
     page = {
             "number": 1,
-            "size": 50
+            "size": 100
             }
     # Pass our authorization token as a header
     headers = {
@@ -60,14 +60,20 @@ def main():
             "page": page
             }
     time.sleep(my_time)
-    ret = requests.get(f'https://api.intra.42.fr/v2/campus/{campus}/locations?sort=-end_at,host&filter[active]=true&range[host]=c{cluster}, c{cluster + 1}r00s00', headers=headers, json=params)
+    url = f'https://api.intra.42.fr/v2/campus/{campus}/locations?sort=-end_at,host&filter[active]=true&range[host]=c{cluster}, c{cluster + 1}r00s00'
+    ret = requests.get(url, headers=headers, json=params)
     users_in_campus = ret.json()
+    #print(ret.text)
     # Check if we have all elements or if there are more pages
     if 'Link' in ret.headers:
-        page['number'] = page['number'] + 1
-        time.sleep(my_time)
-        second_page =  requests.get(f'https://api.intra.42.fr/v2/campus/{campus}/locations?sort=-end_at,host&filter[active]=true&range[host]=c{cluster}, c{cluster + 1}r00s00', headers=headers, json=params).json()
-        users_in_campus = users_in_campus + second_page
+        while True:
+            url = get_next(ret.headers['Link'])
+            if url == "42":
+                break
+            time.sleep(my_time)
+            ret =  requests.get(url, headers=headers)
+            second_page = ret.json()
+            users_in_campus = users_in_campus + second_page
     # Get ammount of active users
     i = 0
     for student in users_in_campus:
@@ -79,6 +85,15 @@ def main():
         print("The Chosen One is: ")
         print(users_in_campus[chosen_one]['user']['login'])
         print(users_in_campus[chosen_one]['user']['location'])
+
+def get_next(link):
+    i = link.find('rel="next"') -  3
+    if i == -4:
+        return ("42")
+    link = link[:i]
+    link = link[1:]
+    return (link)
+    
 
 if __name__ == '__main__':
     main()
