@@ -9,8 +9,11 @@ Running the script with no Command Line Arguments will retrieve you a user from 
 randominette -s
 ```
 ### Flags
--s will allow you to specify a cluster and a campus
--r will give you a whole row of victims
+| Flag| Use |
+| ----------- | ----------- |
+| -s | Will allow you to specify a cluster and a campus |
+| -r | Will give you a whole row of victims |
+
 
 ## Requirements
 Besides those defined in the requirements.txt file, you must have set the following two environment variables:
