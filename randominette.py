@@ -6,7 +6,7 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/18 17:38:24 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/18 17:46:43 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,12 +91,12 @@ def main():
     print(users_in_campus[chosen_one]['user']['location'])
     if len(sys.argv) > 1 and sys.argv[1].find("r") > 0 :
         row = get_user_row(users_in_campus[chosen_one]['user']['location'])
-    if row:
-        print(f"The Chosen row is {row}, and the unlucky ones are: ")
-        for student in users_in_campus:
-            if (get_user_row(student['user']['location'])==row):
-                print(student['user']['login'])
-                print(student['user']['location'])
+        if row:
+            print(f"The Chosen row is {row}, and the unlucky ones are: ")
+            for student in users_in_campus:
+                if (get_user_row(student['user']['location'])==row):
+                    print(student['user']['login'])
+                    print(student['user']['location'])
 
 
 def get_user_row(location):
