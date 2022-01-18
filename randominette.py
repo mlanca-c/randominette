@@ -50,7 +50,7 @@ def main():
     headers = {
             "Authorization": f"{ret['token_type']} {ret['access_token']}",
             }
-    # Pass our pagination definitions as a dict 
+    # Pass our pagination definitions as a dict
     params = {
             "page": page
             }
@@ -80,6 +80,19 @@ def main():
         print("The Chosen One is: ")
         print(users_in_campus[chosen_one]['user']['login'])
         print(users_in_campus[chosen_one]['user']['location'])
+    row = "r20"
+    # row = get_user_row(users_in_campus[chosen_one]['user']['location'])
+    if row:
+        print(f"The Chosen row is {row}, and the unlucky ones are: ")
+        i = 0
+        for student in users_in_campus:
+            if (get_user_row(student['user']['location'])==row):
+                print(student['user']['login'])
+                print(student['user']['location'])
+                i = i + 1
+        print(i)
+
+
 
 def get_next(link):
     i = link.find('rel="next"') -  3
@@ -96,8 +109,10 @@ def search_back(link):
             link = link[i-2:]
             return (link)
         i = i - 1
-    return ("Error")
+    return ("42")
 
+def get_user_row(location):
+    return (location[location.find("r"):location.find("s")])
 
 if __name__ == '__main__':
     main()
