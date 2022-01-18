@@ -6,7 +6,7 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/18 17:46:43 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/18 19:12:01 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,11 +23,15 @@ def main():
     # Get Campus ID and Cluster from user
         campus = int(input("Campus ID (38 for Lisbon): "))
         cluster = int(input("Cluster: "))
-        my_time = int(input("Time between requests: "))
+        my_time = int(input("Time between requests (change at your own risk): "))
     else :
         campus = 38
         cluster = 1
         my_time = 1
+    if (my_time < 0):
+        my_time = 1
+        print("We're not time travelers - time set to 1 second")
+
     client_id = config('42-UID')
     client_secret = config('42-SECRET')
     # Get authorization token
@@ -41,7 +45,10 @@ def main():
             token_url,
             data,
             )
-    ret = access_token.json()
+    ret = access_token
+    if ret.status_code != 200:
+        return(print(f"Error: Failed to get OAUTH2 token: {ret.status_code}"))
+    ret = ret.json()
     # Set pagination
     page = {
             "number": 1,
@@ -56,14 +63,15 @@ def main():
             "page": page
             }
     time.sleep(my_time)
+    # Get info from the API
     url = f'https://api.intra.42.fr/v2/campus/{campus}/locations?sort=-end_at,host&filter[active]=true&range[host]=c{cluster}, c{cluster + 1}r00s00'
-    #print(url)
     ret = requests.get(url, headers=headers, json=params)
+    if ret.status_code != 200:
+        return(print(f"Error: Failed to GET from {url}: Got status code {ret.status_code}"))
     users_in_campus = ret.json()
-    #pprint.pprint(users_in_campus)
     i = 0
     if len(users_in_campus) == 0:
-        return (print(f"There are currently {i} active users in cluster {cluster} at campus {campus}"))
+        return(print(f"There are currently {i} active users in cluster {cluster} at campus {campus}"))
     # Check if we have all elements or if there are more pages
     if 'Link' in ret.headers and len(users_in_campus)==page['size'] :
         while True:
@@ -74,7 +82,6 @@ def main():
             users_in_campus = users_in_campus + second_page
             if len(second_page) != page['size']:
                 break
-            #pprint.pprint(users_in_campus)
     # Get ammount of active users
     for student in users_in_campus:
         i = i + 1
@@ -90,29 +97,27 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1].find("r") > 0 :
         row = get_user_row(users_in_campus[chosen_one]['user']['location'])
         if row:
-            print(f"The Chosen row is {row}, and the unlucky ones are: ")
+            print(f"The Chosen Row is {row}, and the unlucky ones are: ")
             for student in users_in_campus:
                 if (get_user_row(student['user']['location'])==row):
                     print(student['user']['login'])
                     print(student['user']['location'])
-    # Pick a random percentafe for users to be randomly selected
+    # Pick a random percentage for users to be randomly selected
     if len(sys.argv) > 1 and sys.argv[1].find("p") > 0 :
         while (True):
             percentage = int(input("Percentage of victims (%): "))
-            if (percentage <= 100):
+            if (percentage <= 100 and percentage > 0):
                 break
+            else :
+                print("Percentage must be between 0 and 100")
         number_users = int(len(users_in_campus) * (percentage / 100))
+        if number_users >= 0:
+            return (print(f"The percentage {percentage}% translates to a total of 0 users"))
         sample = random_users(users_in_campus, number_users)
         # Print chosen users
         for n in sample:
             print(users_in_campus[n]['user']['login'])
             print(users_in_campus[n]['user']['location'])
-
-def not_duplicate(idx, percentage_users):
-    for n in percentage_users:
-        if idx == n:
-            return False
-    return True
 
 def random_users(users_in_campus, nu):
     i = len(users_in_campus)
