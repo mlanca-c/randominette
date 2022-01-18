@@ -6,7 +6,7 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/18 14:14:02 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/18 15:13:00 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,11 +17,6 @@ import sys
 from decouple import config
 import time
 
-#
-# Some important key assumptions that will hopefully not need to be hardcoded in later versions:
-# Right now, we know we only need to make two calls with a page size of 100 to get a list of all active logins at 42 Lisboa, but not all campus have 200 computers
-# 
-#
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "-s":
     # Get Campus ID and Cluster from user
@@ -49,7 +44,7 @@ def main():
     # Set pagination
     page = {
             "number": 1,
-            "size": 100
+            "size": 70
             }
     # Pass our authorization token as a header
     headers = {
@@ -91,9 +86,18 @@ def get_next(link):
     if i == -4:
         return ("42")
     link = link[:i]
-    link = link[1:]
+    link = search_back(link)
     return (link)
-    
+
+def search_back(link):
+    i = len(link) - 1
+    while i > 2:
+        if link[i] == 't' and link[i-1] == 't' and link[i-2] == 'h' and link[i-3] =='<':
+            link = link[i-2:]
+            return (link)
+        i = i - 1
+    return ("Error")
+
 
 if __name__ == '__main__':
     main()
