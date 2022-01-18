@@ -6,13 +6,14 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/18 11:18:14 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/18 12:18:39 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import requests
 import json
 import random
+import sys
 from decouple import config
 import time
 
@@ -22,19 +23,17 @@ import time
 # 
 #
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "-s":
     # Get Campus ID and Cluster form user
-    campus = int(input("Campus ID (38 for Lisbon): "))
-    cluster = int(input("Cluster: "))
-    #mode = input("Mode (t for testing): ")
-    mode = 'd'
-    if mode == "t" :
-        client_id = config('42-UID-T')
-        client_secret = config('42-SECRET-T')
+        campus = int(input("Campus ID (38 for Lisbon): "))
+        cluster = int(input("Cluster: "))
         my_time = int(input("Time between requests: "))
     else :
-        client_id = config('42-UID')
-        client_secret = config('42-SECRET')
+        campus = 38
+        cluster = 1
         my_time = 1
+    client_id = config('42-UID')
+    client_secret = config('42-SECRET')
     # Get authorization token
     token_url = "https://api.intra.42.fr/oauth/token"
     data = {

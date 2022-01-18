@@ -3,6 +3,11 @@
 ## Purpose
 The purpose of this project is to create a python script that uses 42's API to return a random students login and location in the selected campus and cluster.
 
+## Usage
+Running the script with no Command Line Arguments will retrive you a user from 42 Lisboa's campus at cluster 1 that is currently active. Alternativelly, if you'd like to select a specific campus or cluster you can run
+```
+randominette -s
+```
 ## Requirements
 Besides those defined in the requirements.txt file, you must have set the following two environment variables:
 | Variable | Expansion |
