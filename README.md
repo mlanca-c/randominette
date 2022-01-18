@@ -6,6 +6,7 @@ The purpose of this project is to create a python script that uses 42's API to r
 ## Requirements
 Besides those defined in the requirements.txt file, you must have set the following two environment variables:
 | Variable | Expansion |
+| ----------- | ----------- |
 | 42-UID | The UID provided by 42's platform |
 | 42-SECRET | The Secret token provided by 42's platform |
 
