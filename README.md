@@ -3,6 +3,12 @@
 ## Purpose
 The purpose of this project is to create a python script that uses 42's API to return a random students location and user id in a selected campus.
 
+## Requirements
+Besides those defined in the requirements.txt file, you must have set the following two environment variables:
+| Variable | Expansion |
+| 42-UID | The UID provided by 42's platform |
+| 42-SECRET | The Secret token provided by 42's platform |
+
 ## Resources
 Since we're all new to python,  here are some helpful resources:
 | Subject | Link |
