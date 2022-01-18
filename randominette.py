@@ -6,7 +6,7 @@
 #    By: ayalla, sotto & dutesier                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 18:14:29 by dareias-          #+#    #+#              #
-#    Updated: 2022/01/18 12:18:39 by dareias-         ###   ########.fr        #
+#    Updated: 2022/01/18 12:37:18 by dareias-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ import time
 #
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "-s":
-    # Get Campus ID and Cluster form user
+    # Get Campus ID and Cluster from user
         campus = int(input("Campus ID (38 for Lisbon): "))
         cluster = int(input("Cluster: "))
         my_time = int(input("Time between requests: "))
@@ -46,32 +46,39 @@ def main():
             data,
             )
     ret = access_token.json()
+    # Set pagination
     page = {
             "number": 1,
             "size": 50
             }
+    # Pass our authorization token as a header
     headers = {
             "Authorization": f"{ret['token_type']} {ret['access_token']}",
             }
+    # Pass our pagination definitions as a dict 
     params = {
             "page": page
             }
     time.sleep(my_time)
     ret = requests.get(f'https://api.intra.42.fr/v2/campus/{campus}/locations?sort=-end_at,host&filter[active]=true&range[host]=c{cluster}, c{cluster + 1}r00s00', headers=headers, json=params)
     users_in_campus = ret.json()
+    # Check if we have all elements or if there are more pages
     if 'Link' in ret.headers:
         page['number'] = page['number'] + 1
         time.sleep(my_time)
         second_page =  requests.get(f'https://api.intra.42.fr/v2/campus/{campus}/locations?sort=-end_at,host&filter[active]=true&range[host]=c{cluster}, c{cluster + 1}r00s00', headers=headers, json=params).json()
         users_in_campus = users_in_campus + second_page
+    # Get ammount of active users
     i = 0
     for student in users_in_campus:
         i = i + 1
-    chosen_one = random.randrange(0, i - 1)
     print(f"There are currently {i} active users in cluster {cluster} at campus {campus}")
-    print("The Chosen One is: ")
-    print(users_in_campus[chosen_one]['user']['login'])
-    print(users_in_campus[chosen_one]['user']['location'])
+    # Pick a random user
+    if i:
+        chosen_one = random.randrange(0, i - 1)
+        print("The Chosen One is: ")
+        print(users_in_campus[chosen_one]['user']['login'])
+        print(users_in_campus[chosen_one]['user']['location'])
 
 if __name__ == '__main__':
     main()
