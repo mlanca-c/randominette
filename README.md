@@ -1,7 +1,7 @@
 # randominette :electric_plug:
 *"Push your work my little piscinner"* - Drop, probably.
 ## Purpose
-The purpose of this project is to create a python script that uses 42's API to return a random students location and user id in a selected campus.
+The purpose of this project is to create a python script that uses 42's API to return a random students login and location in the selected campus and cluster.
 
 ## Requirements
 Besides those defined in the requirements.txt file, you must have set the following two environment variables:
@@ -11,7 +11,7 @@ Besides those defined in the requirements.txt file, you must have set the follow
 | 42-SECRET | The Secret token provided by 42's platform |
 
 ## Resources
-Since we're all new to python,  here are some helpful resources:
+Since we're all (*the three of us*) new to python,  here are some helpful resources:
 | Subject | Link |
 | ----------- | ----------- |
 | Python for C Programmers | [CS50 40-minute semminar](https://www.youtube.com/watch?v=Q98L3yaNEao&ab_channel=CS50) to learn the basics of Python for those proficient in C. |
