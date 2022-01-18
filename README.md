@@ -4,7 +4,7 @@
 The purpose of this project is to create a python script that uses 42's API to return a random students login and location in the selected campus and cluster.
 
 ## Usage
-Running the script with no Command Line Arguments will retrive you a user from 42 Lisboa's campus at cluster 1 that is currently active. Alternativelly, if you'd like to select a specific campus or cluster you can run
+Running the script with no Command Line Arguments will retrieve you a user from 42 Lisboa's campus at Cluster 1 that is currently active. Alternativelly, if you'd like to select a specific **campus** or **cluster** you can run
 ```
 randominette -s
 ```
@@ -14,9 +14,10 @@ Besides those defined in the requirements.txt file, you must have set the follow
 | ----------- | ----------- |
 | 42-UID | The UID provided by 42's platform |
 | 42-SECRET | The Secret token provided by 42's platform |
+If you're having trouble a .env file should do the trick.
 
 ## Resources
-Since we're all (*the three of us*) new to python,  here are some helpful resources:
+Since we're all (*the three of us*) new to Python🐍, here are some helpful resources:
 | Subject | Link |
 | ----------- | ----------- |
 | Python for C Programmers | [CS50 40-minute semminar](https://www.youtube.com/watch?v=Q98L3yaNEao&ab_channel=CS50) to learn the basics of Python for those proficient in C. |
