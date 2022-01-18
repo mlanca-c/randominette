@@ -14,6 +14,7 @@ Besides those defined in the requirements.txt file, you must have set the follow
 | ----------- | ----------- |
 | 42-UID | The UID provided by 42's platform |
 | 42-SECRET | The Secret token provided by 42's platform |
+
 If you're having trouble a .env file should do the trick.
 
 ## Resources
